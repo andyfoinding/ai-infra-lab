@@ -35,3 +35,13 @@ jobs:
           docker build \
             -t ai-inference:ci \
             apps/ai-inference
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: ai-inference:ci
+          format: table
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          ignore-unfixed: true
