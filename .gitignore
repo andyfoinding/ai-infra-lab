@@ -19,3 +19,29 @@ crash.*.log
 # Local environment files
 .env
 .env.*
+
+# Python virtual environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest cache
+.pytest_cache/
+
+# MLflow local tracking data
+mlflow.db
+mlflow.db-*
+mlruns/
+mlartifacts/
+
+# Locally generated training models
+mlops/training/model.pkl
+
+# macOS files
+.DS_Store
+
+# IDE settings
+.vscode/
