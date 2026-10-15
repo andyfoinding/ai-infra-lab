@@ -1,15 +1,13 @@
-import mlflow
-import mlflow.sklearn
+from pathlib import Path
 
+import skops.io as sio
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from pathlib import Path
+MODEL_PATH = Path(__file__).resolve().parent / "model.skops"
 
-MODEL_PATH = Path(__file__).resolve().parent
+model = sio.load(MODEL_PATH)
 
-model = mlflow.sklearn.load_model(str(MODEL_PATH))
-# Create FastAPI application
 app = FastAPI(title="AI Infrastructure Inference API")
 
 
@@ -28,5 +26,5 @@ def predict(request: PredictionRequest):
 
     return {
         "input": request.value,
-        "prediction": float(prediction[0])
+        "prediction": float(prediction[0]),
     }
