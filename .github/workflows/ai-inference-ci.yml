@@ -1,5 +1,9 @@
 name: AI Inference CI
 
+permissions:
+  contents: read
+  id-token: write
+
 on:
   push:
     branches: [main]
@@ -45,3 +49,27 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: '1'
           ignore-unfixed: true
+
+      - name: Authenticate to Google Cloud
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/398574054377/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: github-actions@ai-infra-lab-2026.iam.gserviceaccount.com
+
+      - name: Set up Google Cloud CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker authentication
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          gcloud auth configure-docker us-east1-docker.pkg.dev --quiet
+
+      - name: Tag and push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          IMAGE="us-east1-docker.pkg.dev/ai-infra-lab-2026/ai-infra-images/ai-inference"
+
+          docker tag ai-inference:ci "$IMAGE:${GITHUB_SHA}"
+          docker push "$IMAGE:${GITHUB_SHA}"
