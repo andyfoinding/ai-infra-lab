@@ -73,3 +73,23 @@ jobs:
 
           docker tag ai-inference:ci "$IMAGE:${GITHUB_SHA}"
           docker push "$IMAGE:${GITHUB_SHA}"
+
+      - name: Deploy to Cloud Run
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          IMAGE="us-east1-docker.pkg.dev/ai-infra-lab-2026/ai-infra-images/ai-inference"
+
+          gcloud run deploy ai-inference \
+            --image="$IMAGE:${GITHUB_SHA}" \
+            --region=us-east1 \
+            --project=ai-infra-lab-2026 \
+            --platform=managed \
+            --port=8000 \
+            --cpu=1 \
+            --memory=1Gi \
+            --min-instances=0 \
+            --max-instances=1 \
+            --concurrency=1 \
+            --cpu-throttling \
+            --no-allow-unauthenticated \
+            --quiet
