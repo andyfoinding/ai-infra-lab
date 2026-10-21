@@ -7,8 +7,15 @@ permissions:
 on:
   push:
     branches: [main]
+    paths:
+      - "apps/ai-inference/**"
+      - ".github/workflows/ai-inference-ci.yml"
+
   pull_request:
     branches: [main]
+    paths:
+      - "apps/ai-inference/**"
+      - ".github/workflows/ai-inference-ci.yml"
 
 jobs:
   test-and-build:
