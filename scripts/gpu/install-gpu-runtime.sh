@@ -61,14 +61,20 @@ echo "Step 3: Installing Docker Engine"
 echo "======================================"
 
 if ! command -v docker >/dev/null 2>&1; then
-
     apt-get install -y docker.io
-
 else
     echo "Docker already installed."
 fi
 
 systemctl enable --now docker
+
+echo "Checking Docker Compose v2..."
+
+if ! docker compose version >/dev/null 2>&1; then
+    apt-get install -y docker-compose-v2
+fi
+
+docker compose version
 
 echo "======================================"
 echo "Step 4: Installing NVIDIA Container Toolkit"
