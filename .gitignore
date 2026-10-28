@@ -45,3 +45,11 @@ mlops/training/model.pkl
 
 # IDE settings
 .vscode/
+
+# Private keys and credentials
+*.pem
+*.key
+
+# Terraform provider lock files should remain tracked
+# ChromaDB persistent database
+**/data/chroma/
